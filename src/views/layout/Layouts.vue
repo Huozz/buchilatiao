@@ -51,14 +51,15 @@
                     <!-- 头像及悬浮框 -->
                     <el-col :span="2">
                         <!-- 头像小图 -->
-                        <img v-popover:avatarPop :src="avatarUrl" style="margin-top: 4px; margin-right:10px; width:52px; height:52px">
+                        <img v-popover:avatarPop src="../../assets/kuluomi.jpg" style="margin-top: 4px; margin-right:10px; width:52px; height:52px">
                         <!-- 头像悬浮框 -->
                         <el-popover ref="avatarPop" placement="top-start" :title="githubUsername" width="200" trigger="hover">
                             <i class="el-icon-star-on"></i>&emsp;{{githubUsername}}
                             <br>
                             <i class="el-icon-location"></i>&emsp;{{location? location : '未填写'}}
                             <br>
-                            <img :src="avatarUrl" style="width:200px; height:200px">
+                            <img src="../../assets/kuluomi.jpg" style="width:200px; height:200px">
+                    
                         </el-popover>
 
                     </el-col>
@@ -120,7 +121,7 @@ export default {
            'fontColor',
            'webSites',//关于作者一栏的更多信息
            'blog', //作者的其他博客
-           'avatarUrl',//头像链接
+        //    'avatarUrl',//头像链接
            'location', //作者位置
        ])
    },
