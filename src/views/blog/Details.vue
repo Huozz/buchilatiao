@@ -12,7 +12,7 @@
                <el-col :span="12">
                   <div style="text-align: right">
                      <el-button @click="goBack" icon="el-icon-back" style="padding: 3px 0" type="text">返回</el-button>
-                     <el-button @click="goEdit" icon="el-icon-edit-outline" style="padding 3px 0" type="text">编辑</el-button>
+                     <el-button @click="goEdit" icon="el-icon-edit-outline" style="padding 3px 0" type="text" v-if="token">编辑</el-button>
                   </div>
                </el-col>
             </el-row>
@@ -85,6 +85,7 @@ export default {
       this.$http.get('/api/articleDetail/' + id).then(
         response => {
            let article = response.body;
+           console.log("article",article)
            this.blog.id = id;
             this.blog.title = article.title;
             this.blog.description = article.description;
@@ -101,7 +102,7 @@ export default {
       goEdit(){
          if(!this.token){
             this.$message({
-               message: '请绑定有效token',
+               message: '请登录',
                type: 'warning'
             })
             return

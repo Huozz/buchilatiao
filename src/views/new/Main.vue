@@ -16,7 +16,9 @@
          <div style="font-size: 1.1rem;line-height: 1.5;color: #303133;border-bottom: 1px solid #E4E7ED;padding: 35px 0px 5px 0px; text-align:left">
             {{blog.description}}
          </div>
-         <div v-html="blog.content" class="markdown-body" style="padding-top:40px" ></div>
+         <div class="mavon-editor">
+            <mavon-editor v-html="blog.content" class="markdown-body"></mavon-editor>
+         </div>
       </el-card>
       <el-card shadow="never" style="margin-bottom: 40px padding: 20px 0px 20px 0px text-align:center" v-if="!blog">
          <font style="font-size: 30px; color: #ddddd">
@@ -58,39 +60,14 @@ export default {
 
    mounted(){
       this.loading = true
-      /*
-      GistApi.list().then((response) => {
-         console.log("new",response)
-         let result = response.body.reverse()
-         if(!result || result.length==0){
-            this.loading = false
-            return
-         }
-         // 由于list中没有博文的content，因此再请求single获取该博文详细内容
-         this.blog.id = result[0]['id']
-         GistApi.single(this.blog.id).then((response)=>{
-            this.result = response.body;     
-            this.blog.description = result[0]['description']
-            this.blog.title = result.title
-            this.blog.label = result.label
-            this.blog.content = result.content
-            this.blog.date = result.date
-            
-         }).then(()=>{
-            this.loading = false
-         })
-      })
-      */
-
       this.$http.get('/api/articleList').then(
          response => {
-            console.log("response",response) ;
             let blogs = response.body.reverse(); 
             let blog = blogs[0];
             this.loading = false;
             this.blog.title = blog.title;
             this.blog.date = blog.date;
-            this.blog.content = blog.content;
+            this.blog.content = this.$markdown(blog.content);
          },
          response => {console.log("error",response); this.loading = false}
       )

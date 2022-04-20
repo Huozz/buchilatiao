@@ -30,10 +30,7 @@
                                 <el-menu-item index="#githubHome">github主页</el-menu-item>
                                 <el-menu-item index="#blog">其他博客</el-menu-item>
                             </el-submenu>
-                            <el-submenu index="#webSites"> 
-                                <template slot="title">其他网站</template>
-                                <el-menu-item :index="'#webSites-'+index" v-for="(item,index) in webSites" :key="'#webSites'+index">{{item.name}}</el-menu-item>
-                            </el-submenu>
+            
                         </el-menu>
                     </el-col>
 
@@ -58,8 +55,9 @@
                             <br>
                             <i class="el-icon-location"></i>&emsp;{{location? location : '未填写'}}
                             <br>
-                            <img src="../../assets/kuluomi.jpg" style="width:200px; height:200px">
-                    
+                            <!-- <img src="../../assets/kuluomi.jpg" style="width:200px; height:200px"> -->
+                            <!-- <img :src="getImage" style="width:200px; height:200px"> -->
+                            <img src="../../../static/kuluomi.jpg" style="width:200px; height:200px"> 
                         </el-popover>
 
                     </el-col>
@@ -123,7 +121,10 @@ export default {
            'blog', //作者的其他博客
         //    'avatarUrl',//头像链接
            'location', //作者位置
-       ])
+       ]),
+       getImage(){
+           return require('../../../static/melody.jpg')
+       }
    },
    mounted(){
 
@@ -137,12 +138,12 @@ export default {
            temp['top'] = top;
            temp['size'] = size;
            this.iconPosition.push(temp);
-           console.log(temp)
        }
    },
 
    methods: {
        full(){
+           console.log("go full222");
            // 触发full 方法，先判断当前full的状态，将full 取反，并且使用util中的方法设置或取消fullScreen()
            if(!this.fullButton.full) {
                this.$util.fullScreen();

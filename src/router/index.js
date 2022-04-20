@@ -1,17 +1,25 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import Layouts from '../views/layout/Layouts'
 
-import NewMain from '../views/new/Main'
-import SocialMain from '../views/social/Main'
-import SocialDetails from '../views/social/Details'
-import BlogMain from '../views/blog/Main'
-import BlogDetails from '../views/blog/Details'
-import BlogAdd from '../views/blog/Add'
-import BlogEdit from '../views/blog/Edit'
+// import Layouts from '../views/layout/Layouts'
+// import NewMain from '../views/new/Main'
+// import SocialMain from '../views/social/Main'
+// import SocialDetails from '../views/social/Details'
+// import BlogMain from '../views/blog/Main'
+// import BlogDetails from '../views/blog/Details'
+// import BlogAdd from '../views/blog/Add'
+// import BlogEdit from '../views/blog/Edit'
 
-
+// 使用路由懒加载
+const Layouts = ()=> import( '../views/layout/Layouts')
+const NewMain = ()=> import('../views/new/Main')
+const SocialMain = () => import('../views/social/Main')
+const SocialDetails = () => import('../views/social/Details')
+const BlogMain = ()=> import('../views/blog/Main')
+const BlogDetails = ()=>import('../views/blog/Details')
+const BlogAdd = ()=> import('../views/blog/Add')
+const BlogEdit = () => import('../views/blog/Edit')
 
 
 Vue.use(Router)
@@ -97,7 +105,7 @@ export const constantRouterMap=[
         path:'add',
         component: BlogAdd,
         meta: {
-          title: '发表博客'
+          title: '发表博客',
         }
       },
       {
@@ -120,7 +128,11 @@ export const constantRouterMap=[
 ]
 
 const router = new Router({
-  routes: constantRouterMap
+  routes: constantRouterMap,
+  mode: 'history',
+  base: '/blog/'
 })
+
+
 
 export default router

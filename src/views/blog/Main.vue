@@ -17,8 +17,8 @@
                </el-col>
                <el-col :span=4>
                   <div style="text-align: right">
-                     <el-button @click="editBlog(item.id)" style="padding: 3px 0" type="text" icon="el-icon-edit"> </el-button>
-                     <el-button @click="deleteBlog(item.id)" style="padding: 3px 0" type="text" icon="el-icon-delete"></el-button>
+                     <el-button @click="editBlog(item.id)" style="padding: 3px 0" type="text" icon="el-icon-edit" v-if="token"> </el-button>
+                     <el-button @click="deleteBlog(item.id)" style="padding: 3px 0" type="text" icon="el-icon-delete" v-if="token"></el-button>
                   </div>
                </el-col>
             </el-row>
@@ -127,13 +127,13 @@ export default {
       },
       // 进入增加博文页面
       goAdd(){
-         // if(!this.token){
-         //    this.$message({
-         //       message: '请绑定有效token',
-         //       type: 'warning'
-         //    })
-         //    return
-         // }
+         if(!this.token){
+            this.$message({
+               message: '请先登录',
+               type: 'warning'
+            })
+            return
+         }
          this.$router.push('/user/blog/add')
       },
       // 点击当前博客查看详情
@@ -144,25 +144,7 @@ export default {
       editBlog(id){
          this.$router.push('/user/blog/edit/'+id)
       },
-      // 删除当前博客，调用GistApi删除gist中的条目,同时删除this.blog中的对应博文
-      // deleteBlog(index){
-      //    this.$confirm('确定删除该博客?','提示',{
-      //       confrimButtonText: '确定',
-      //       cancleButtonText:'取消',
-      //       type: 'warning'
-      //    }).then(()=>{
-      //       let blog = this.blogs[index]
-      //       console.log(blog.id)
-      //       GistApi.delete(blog.id).then((result)=>{
-      //          this.$message({
-      //             message: "删除博客成功",
-      //             type: 'success'
-      //          })
-      //       })
-      //       // splice(要删除的位置,要删除的元素个数)
-      //       this.blogs.splice(index, 1)
-      //    })
-      // }
+
       deleteBlog(id){
          let self = this
         this.$confirm('此操作将永久删除该文章, 是否继续?', '提示', {

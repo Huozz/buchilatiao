@@ -44,7 +44,6 @@ export default{
     edit: function(form){
         let files = {}
         files[form.title] = { content: form.content }
-        console.log(form.title)
         return request({
             url: '/gists/'+form.id,
             method: 'PATCH',

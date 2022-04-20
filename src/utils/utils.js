@@ -1,3 +1,4 @@
+import request from './request'
 export default {
     // 生成随机位置音符时使用，输入起始和终止，返回这个区间内的随机数
     randomInt(s,e){
@@ -119,6 +120,25 @@ export default {
         if (mm < 10) mm = '0' + mm
         if (ss < 10) ss = '0' + ss
         return  y + '-' + m + '-' + d + ' ' + hh + ':' + mm + ':' + ss
-    }
+    },
+
+    uploadImage(data){
+        return request({
+          url: '/image/uploadImage',
+          method: 'post',
+          data,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+      },
+      delImgByUrl(data){
+        return request({
+          url: '/image/delImgByUrl',
+          method: 'post',
+          data
+        })
+      }
+
 
 }

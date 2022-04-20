@@ -46,7 +46,6 @@ export default {
        },
        signUp() {
             let _this = this;
-            console.log(this.userInfo.name)
             if (this.userInfo.name.length < 6) {
                 this.$message.error('用户名不能为空或小于六个字符')
                 return
@@ -84,7 +83,6 @@ export default {
                 )
                 }
             },
-            response => console.log(response)
             )
       },
        signIn(){
@@ -108,6 +106,8 @@ export default {
                         name: _this.userInfo.name,
                         password: _this.userInfo.password
                     }
+                    window.sessionStorage.setItem('token', _this.userInfo.name+'asdf')
+                    _this.$store.dispatch('Authentic',window.sessionStorage.getItem('token'));
                     _this.$http.post('/api/admin/signin', {
                         userInfo: obj
                 }).then(
@@ -116,6 +116,8 @@ export default {
                         message: '登录成功',
                         type: 'success'
                     })
+                    
+                    console.log("登录的response",response);
                     delete _this.userInfo.password;
                     this.show = false
                     // _this.$router.go(-1)

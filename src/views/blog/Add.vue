@@ -101,9 +101,25 @@ export default {
    },
 
    methods: {
-      imgAdd(){
-         this.$refs['md'].$img2Url(pos, file.miniurl)
+      // 以formatdata格式上传
+      imgAdd(pos, $file){
+         // this.$refs['md'].$img2Url(pos, file.miniurl)
+               //以formdata格式上传
+         console.log($file)
+         console.log("base_api",process.env.API_ROOT)
+         let formData = new FormData();
+         formData.append("file",$file);
+         utils.uploadImage(formData)
+         .then(res => {
+               // this.$refs.md.$img2Url 作用是把Markdown里上传成功的图片url替换为服务器返回的url
+            // this.$refs.md.$img2Url(pos, this.baseUrl + res.url);
+            this.$refs.md.$img2Url(pos, process.env.API_ROOT + res.data.url);
+         })
+         .catch(err => {
+            console.log(err);
+         });
       },
+
       change(value,render){
          this.form.content = render
       },
@@ -126,22 +142,7 @@ export default {
                // 表单验证通过，按钮进入加载状态，禁用再次点击
                this.submitButton.loading = true
                this.submitButton.disabled = true
-               console.log(this.form.title)
-               console.log(this.form.content)
-               console.log(this.html)
                this.form.date = utils.getDate()
-               console.log(this.form.date)
-               // GistApi.create(this.form).then((response)=>{
-               //    let result = response.data
-               //    console.log(result)
-               //    this.$message({
-               //       message: "发表成功",
-               //       type: "success"
-               //    })
-               // }).then(()=>{
-               //    this.submitButton.loading = false
-               //    this.submitButton.disabled = false
-               // })
                this.$http.post('/api/admin/saveArticle', {
                   articleInformation: this.form
                }).then(

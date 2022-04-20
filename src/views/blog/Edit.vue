@@ -4,13 +4,13 @@
       <el-card>
          <el-form :model="form" ref="form" :rules="rules" label-width="80px">
             <el-form-item label="标题"  prop="title">
-               <el-input v-model="form.title" disabled></el-input>
+               <el-input v-model="form.title" ></el-input>
             </el-form-item>
             <el-form-item label="描述"  prop="description">
                <el-input v-model="form.description" type="text-area"></el-input>
             </el-form-item>
             <el-form-item label="博客正文"  prop="content">
-               <mavon-editor @change="change" style="max-height: 500px" v-model="form.content" :toolbars="toolBars"></mavon-editor>
+               <mavon-editor @imgAdd="imageAdd" @change="change" style="max-height: 500px" v-model="form.content" :toolbars="toolBars" ref="md"></mavon-editor>
             </el-form-item>
             <el-form-item>
                <el-button type="primary" @click="onSubmit" :loading="submitButton.loading" :disabled="submitButton.disabled">修改</el-button>
@@ -26,6 +26,7 @@
 import { mapGetters } from 'vuex';
 import TokenDialog from '../../views/common/TokenDialogue'
 import GistApi from '../../api/gist'
+import utils from '../../utils/utils'
 export default {
    data () {
       return {
@@ -33,6 +34,7 @@ export default {
          form:{
             id: '',
             title: '',
+            data: '',
             description: '',
             content: ''
          },
@@ -110,20 +112,35 @@ export default {
          return
       }
       this.form.id = this.$route.params.id
-      GistApi.single(this.$route.params.id).then((response)=>{
-         let result = response.data;
-         this.form.description = result.description
-         for(let key in result.files){
-            this.form.title = key
-            this.form.content = result.files[key]['content']
-            break
+
+      this.$http.get('/api/articleDetail/'+this.$route.params.id).then(
+         response => {
+            let article = response.body;
+            console.log("article",article);
+            this.form.id = this.$route.params.id;
+            this.form.title = article.title;
+            this.form.description = article.description;
+            this.form.content = article.content;
          }
-      }).then(()=>{
-         this.loading = false;
-      })
+      )
+
    },
 
    methods: {
+            // 以formatdata格式上传
+      imageAdd(pos, $file){
+         console.log($file)
+         console.log("base_api",process.env.API_ROOT)
+         let formData = new FormData();
+         formData.append("file",$file);
+         utils.uploadImage(formData)
+         .then(res => {
+            this.$refs['md'].$img2Url(pos, process.env.API_ROOT + res.data.url);
+         })
+         .catch(err => {
+            console.log(err);
+         });
+      },
       onSubmit(){
          if(this.token){
             this.publish()
@@ -137,21 +154,32 @@ export default {
          this.form.content = render
       },
       publish(){
+         let self = this;
          this.$refs['form'].validate((valid)=>{
             if(valid){
                this.submitButton.loading = true
                this.submitButton.disabled = true
-               GistApi.edit(this.form).then((response)=>{
-                  let result = response.data
+              let obj = {};
+              obj._id = this.form.id;
+              obj.title = this.form.title;
+              obj.description = this.form.description;
+              obj.content = this.form.content;
+              obj.date = utils.getDate();
+              console.log(this.form)
+              self.$http.post('/api/admin/updateArticle',{
+                 articleInformation: obj
+              }).then(
+                 response =>{
                   this.$message({
                      message: '修改成功!',
                      type:'success'
                   })
-                  this.$router.push('/user/blog/details/'+result.id)
-               }).then(()=>{
-                  this.submitButton.loading = false;
-                  this.submitButton.disabled = false;
-               })
+                  this.$router.push('/user/blog/details/'+obj._id)
+                  this.submitButton.loading = false
+                  this.submitButton.disabled = false
+                 }
+
+              )
 
             }
          })

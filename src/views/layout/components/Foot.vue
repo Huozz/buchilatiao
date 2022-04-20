@@ -10,11 +10,11 @@
            <el-col :span="4">
                <div style="text-align:center; font-size:10px">
                    <i class="el-icon-location-outline"></i>
+                   <a href="https://beian.miit.gov.cn" target="_blank">粤ICP备2022041394号</a>
                </div>
            </el-col>
            <el-col :span="10">
                <div style="float:right;">
-                   <a href="https://docs.github.com/en/rest/reference/enterprise-admin" target="_blank">GitHubAPI</a>
                    <a href="https://element.eleme.cn/" target="_blank">ElementUI</a>
                </div>
            </el-col>
